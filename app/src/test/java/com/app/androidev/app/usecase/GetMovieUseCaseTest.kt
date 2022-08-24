@@ -1,20 +1,33 @@
 package com.app.androidev.app.usecase
 
-import org.junit.After
+import com.app.androidev.ui.home.mvvm.MovieRepository
+import io.mockk.MockKAnnotations
+import io.mockk.coVerify
+import io.mockk.impl.annotations.RelaxedMockK
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 
 class GetMovieUseCaseTest {
 
-    @Before
-    fun setUp() {
-    }
+    @RelaxedMockK
+    private lateinit var movieRepository: MovieRepository
 
-    @After
-    fun tearDown() {
+    lateinit var getMovieUseCase: GetMovieUseCase
+
+    @Before
+    fun onBefore() {
+        MockKAnnotations.init(this)
+        getMovieUseCase = GetMovieUseCase(movieRepository)
     }
 
     @Test
-    operator fun invoke() {
+    fun `when the api return something value`() = runBlocking {
+
+        getMovieUseCase()
+
+        coVerify(exactly = 1) {
+            movieRepository.getMovies()
+        }
     }
 }
